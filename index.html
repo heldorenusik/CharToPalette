@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Color Bar</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* горизонтальне центрування */
+      font-family: sans-serif;
+    }
+
+    .palette-container { 
+      margin-bottom: 20px; 
+      width: 1000px; /* ширина палітри */
+    }
+
+    .palette-title { 
+      font-weight: bold; 
+      margin-bottom: 5px; 
+      text-align: center; /* центр заголовка палітри */
+    }
+
+    .color-bar { 
+      display: flex; 
+      width: 100%; 
+      height: 75px;
+      border: 1px solid #000; 
+    }
+
+    .color-segment { 
+      flex: 1; 
+    }
+
+    .main-title { 
+      text-align: center; 
+      font-size: 24px; 
+      margin-bottom: 30px; 
+    }
+  </style>
+</head>
+<body>
+
+<h1 id="mainTitle" class="main-title"></h1>
+
+<div id="colorBars"></div>
+
+<script src="textToPalette.js"></script>
+<script src="util.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const palettes = getColorPalettes();
+    const mainTitle = document.getElementById("mainTitle");
+    mainTitle.textContent = `"${palettes.message}"`;
+    mainTitle.style.fontSize = "20px";
+    mainTitle.style.fontWeight = "normal";
+
+    const barsContainer = document.getElementById("colorBars");
+
+    palettes.palettes.forEach(({ name, palette }) => {
+      const container = document.createElement("div");
+      container.className = "palette-container";
+
+      const title = document.createElement("div");
+      title.className = "palette-title";
+      title.textContent = name;
+
+      const bar = document.createElement("div");
+      bar.className = "color-bar";
+
+      palette.forEach(color => {
+        const segment = document.createElement("div");
+        segment.className = "color-segment";
+        segment.style.backgroundColor = color;
+        bar.appendChild(segment);
+      });
+
+      container.appendChild(title);
+      container.appendChild(bar);
+      barsContainer.appendChild(container);
+    });
+  });
+</script>
+
+</body>
+</html>
