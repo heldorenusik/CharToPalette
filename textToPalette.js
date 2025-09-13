@@ -27,7 +27,7 @@ function removeSpaces(str) {
 
 /**
  * removes all non-english symbols and converts to lower case
- * 
+ *
  */
 function cleanTextToLowercaseEnglishLettersOnly(input) {
   return input.toLowerCase().replace(/[^a-z]/g, ""); // keep only English letters
@@ -47,6 +47,14 @@ function toHex(value) {
  */
 function rgbToHex(r, g, b) {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+/**
+ * convert hex color to r g b
+ */
+function hexToRgb(hex) {
+  const bigint = parseInt(hex.slice(1), 16);
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 }
 
 /**
@@ -140,7 +148,7 @@ function charCodeToHexColor_singleChannelCondition(code) {
  * @param lightness - lightness value [0; 100], default is 50
  */
 function charCodeToHexColor_hsl(code, saturation = 100, lightness = 50) {
-  const hue = scaleValue(code, CODE_INTERVAL_MIN, CODE_INTERVAL_MAX, 0, 360); // scale code to [0; 360] for hue
+  const hue = scaleValue(code, CODE_INTERVAL_MIN, CODE_INTERVAL_MAX, 0, 359); // scale code to [0; 360) for hue
   return hslToHex(hue, saturation, lightness);
 }
 
@@ -217,14 +225,21 @@ function convertMessageToCharCodes(message) {
 }
 
 /**
+ * colorize text with hex color for nice output
+ */
+function colorize(hex, text) {
+  const [r, g, b] = hexToRgb(hex);
+  return `\x1b[38;2;${r};${g};${b}m${text}\x1b[0m`;
+}
+
+/**
  * pring task results for palette created with specific strategy
  */
 function printPaletteResults(palette, strategyName) {
   console.log(`\n=== ${strategyName} ===`);
-  console.log(`Palette: ${palette}`);
+  console.log(`Palette: ${palette.map((c) => colorize(c, c)).join(", ")}`);
   console.log(`All colors count: ${palette.length}`);
   console.log(`Unique colors count: ${calculateUniqueColorsCount(palette)}`);
-  console.log(`Preview:\n${palette.join(" ")}`);
 }
 
 /**

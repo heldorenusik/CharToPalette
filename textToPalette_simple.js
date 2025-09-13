@@ -56,7 +56,6 @@ function printPaletteResults(palette, strategyName) {
   console.log(`Palette: ${palette.join(", ")}`);
   console.log(`All colors count: ${palette.length}`);
   console.log(`Unique colors count: ${calculateUniqueColorsCount(palette)}`);
-  console.log(`Preview:\n${palette.join(" ")}`);
 }
 
 // run application logic
@@ -85,7 +84,7 @@ function charCodeToHexColor_raw(code) {
  * @param lightness - lightness value [0; 100], default is 50
  */
 function charCodeToHexColor_hsl(code, saturation = 100, lightness = 50) {
-  const hue = scaleValue(code, CODE_INTERVAL_MIN, CODE_INTERVAL_MAX, 0, 360); // scale code to [0; 360] for hue
+  const hue = scaleValue(code, CODE_INTERVAL_MIN, CODE_INTERVAL_MAX, 0, 359); // scale code to [0; 360) for hue
   return hslToHex(hue, saturation, lightness);
 }
 
